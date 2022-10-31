@@ -284,7 +284,7 @@ class InquireWorker : public Nan::AsyncWorker {
             }
 
             Local<Value> argv[2];
-            argv[0] = Nan::Undefined();
+            argv[0] = resultArray;
             argv[1] = resultArray;
 
             Nan::Call(*callback, 2, argv);
