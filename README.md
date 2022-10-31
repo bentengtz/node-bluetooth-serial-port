@@ -1,5 +1,8 @@
 # Bluetooth serial port communication for Node.js
 
+> Edit List for use with Idearlabs Fitting Software
+> - DeviceINQ.cc line 287 change to argv[0] = resultArray;
+
 > Note: This fork doesn't aim for backward compatibility with the (now unmaintained) upstream project. There are a handful of differences, but the documentation should be up to date.
 >
 > Supported versions: Node 10 - 14 (primary focus on LTS). Generally we'll follow the [Node Long Term Support schedule](https://nodejs.org/en/about/releases/).
