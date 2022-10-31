@@ -2,6 +2,8 @@
 
 > Edit List for use with Idearlabs Fitting Software
 > - DeviceINQ.cc line 287 change to argv[0] = resultArray;
+> - To build, run node-gyp rebuild --target=[ELECTRON VERSION] --arch=[NODE ARCH] --dist-url=https://electronjs.org/headers
+> - e.g. node-gyp rebuild --target=19.0.0 --arch=ia32 --dist-url=https://electronjs.org/headers
 
 > Note: This fork doesn't aim for backward compatibility with the (now unmaintained) upstream project. There are a handful of differences, but the documentation should be up to date.
 >
