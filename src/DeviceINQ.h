@@ -23,11 +23,14 @@
 struct bt_device {
     char address[19];
     char name[248];
+    int servicesCount = 0;
+    char *services[16];
 };
 
 #ifndef __APPLE__
 struct bt_inquiry {
     int num_rsp;
+    int num_rsp2;
     bt_device *devices;
 };
 #endif

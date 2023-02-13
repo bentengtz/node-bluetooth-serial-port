@@ -13,6 +13,8 @@
 #define WIN32_LEAN_AND_MEAN
 #endif
 
+#define UNICODE
+
 #include <Windows.h>
 #include <v8.h>
 #include <node.h>
@@ -37,16 +39,16 @@ void BTSerialPortBinding::EIO_Connect(uv_work_t *req) {
     if (baton->rfcomm->s != SOCKET_ERROR) {
         SOCKADDR_BTH bluetoothSocketAddress = { 0 };
         int bluetoothSocketAddressSize = sizeof(SOCKADDR_BTH);
-        int stringToAddressError = WSAStringToAddress(baton->address,
-                                                      AF_BTH,
-                                                      nullptr,
-                                                      (LPSOCKADDR)&bluetoothSocketAddress,
-                                                      &bluetoothSocketAddressSize);
+        int stringToAddressError = WSAStringToAddress(reinterpret_cast<LPWSTR>(baton->address),
+            AF_BTH,
+            nullptr,
+            (LPSOCKADDR)&bluetoothSocketAddress,
+            &bluetoothSocketAddressSize);
         if (stringToAddressError != SOCKET_ERROR) {
             bluetoothSocketAddress.port = baton->channelID;
             baton->status = connect(baton->rfcomm->s,
-                                   (LPSOCKADDR)&bluetoothSocketAddress,
-                                   bluetoothSocketAddressSize);
+                (LPSOCKADDR)&bluetoothSocketAddress,
+                bluetoothSocketAddressSize);
             if (baton->status != SOCKET_ERROR) {
                 unsigned long enableNonBlocking = 1;
                 ioctlsocket(baton->rfcomm->s, FIONBIO, &enableNonBlocking);
