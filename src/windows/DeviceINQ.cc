@@ -244,8 +244,8 @@ bt_inquiry DeviceINQ::doInquire()
                     // Convert address returned from WSALookupServiceNextW() from LPWSTR to char *
                     wcstombs(name, querySet->lpszServiceInstanceName, sizeof(name));
 
-                    printf("%s\n", strippedAddress);
-                    printf("%s\n", name);
+                    // printf("%s\n", strippedAddress);
+                    // printf("%s\n", name);
 
                     HANDLE lookupServiceHandle2;
                     GUID protocol = L2CAP_PROTOCOL_UUID;
@@ -278,7 +278,7 @@ bt_inquiry DeviceINQ::doInquire()
                             if (lookupServiceError2 != SOCKET_ERROR)
                             {
                                 wcstombs(name2, querySet2Result->lpszServiceInstanceName, sizeof(name2));
-                                printf("%s\n", name2);
+                                // printf("%s\n", name2);
                                 if (strlen(name2) == 0)
                                     continue;
                                 max_bt_device_list[num_rsp].services[num_rsp2] = (char *)malloc(sizeof(name2));
@@ -287,7 +287,7 @@ bt_inquiry DeviceINQ::doInquire()
                             }
                             else
                             {
-                                printf("\n");
+                                // printf("\n");
                                 int lookupServiceErrorNumber2 = WSAGetLastError();
                                 max_bt_device_list[num_rsp].servicesCount = num_rsp2;
 
