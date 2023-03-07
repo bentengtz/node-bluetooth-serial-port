@@ -42,7 +42,7 @@
   "scripts": {
     "install": "node-gyp configure build",
     "install-debug": "node-gyp configure build --debug",
-    "install-electron": "node-gyp configure rebuild --target=22.0.3 --arch=ia32 --dist-url=https://electronjs.org/headers",
+    "install-electron": "node-gyp configure rebuild --target=23.1.1 --arch=ia32 --dist-url=https://electronjs.org/headers",
     "test": "node ./test/index.js"
   },
   "license": "MIT",

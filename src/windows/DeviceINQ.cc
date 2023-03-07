@@ -448,7 +448,6 @@ public:
     void HandleOKCallback()
     {
         Nan::HandleScope scope;
-        Isolate *isolate;
 
         Local<Array> resultArray = Nan::New<Array>(inquiryResult.num_rsp);
 
