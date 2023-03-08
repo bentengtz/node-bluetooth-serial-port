@@ -1,7 +1,7 @@
 var bt = require('../lib/bluetooth-serial-port.js');
 var Bt = new bt.BluetoothSerialPort();
 
-console.log('Checking client...');
+console.log('\n\n\n\n\nChecking client...');
 
 [
     'inquire', 'findSerialPortChannel', 'connect', 'write', 'on', 'close'
@@ -12,11 +12,11 @@ console.log('Checking client...');
 });
 
 const channelFound = (channel) => {
-    console.log(`Found channel at ${channel}`)
+    console.log(`\nFound channel at ${channel}`)
 }
 
 const channelNotFound = () => {
-    console.log(`Channel not found`);
+    console.log(`\nChannel not found`);
 }
 
 const found = (address, name, services) => {
@@ -29,7 +29,7 @@ const found = (address, name, services) => {
 }
 
 const finished = (devices) => {
-    console.log('finished');
+    console.log('\nfinished');
 }
 
 Bt.on('found', found)

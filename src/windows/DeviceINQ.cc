@@ -31,6 +31,28 @@ using namespace std;
 using namespace node;
 using namespace v8;
 
+// callback for BluetoothSdpEnumAttributes()
+
+BOOL __stdcall callback(ULONG uAttribId, LPBYTE pValueStream, ULONG cbStreamSize, LPVOID pvParam)
+{
+    SDP_ELEMENT_DATA element;
+
+    printf("uAttribId:\t%ul\n", uAttribId);
+    printf("cbStreamSize:\t%ul\n ", cbStreamSize);
+
+    if (BluetoothSdpGetElementData(pValueStream, cbStreamSize, &element) != ERROR_SUCCESS)
+    {
+        printf("BluetoothSdpGetElementData() failed with error code %ld\n", WSAGetLastError());
+        return FALSE;
+    }
+    else
+    {
+        printf("*pValueStream:\t%u\n", *pValueStream);
+        printf("element.data.string.value: \t%u\n\n", element.data.string.value);
+        return TRUE;
+    }
+}
+
 void DeviceINQ::EIO_SdpSearch(uv_work_t *req)
 {
     sdp_baton_t *baton = static_cast<sdp_baton_t *>(req->data);
@@ -244,9 +266,6 @@ bt_inquiry DeviceINQ::doInquire()
                     // Convert address returned from WSALookupServiceNextW() from LPWSTR to char *
                     wcstombs(name, querySet->lpszServiceInstanceName, sizeof(name));
 
-                    // printf("%s\n", strippedAddress);
-                    // printf("%s\n", name);
-
                     HANDLE lookupServiceHandle2;
                     GUID protocol = L2CAP_PROTOCOL_UUID;
 
@@ -264,6 +283,8 @@ bt_inquiry DeviceINQ::doInquire()
                     {
                         num_rsp2 = 0;
                         inquiryComplete2 = false;
+
+                        int i = 1;
                         while (!inquiryComplete2)
                         {
                             BYTE buffer[2000] = {0};
@@ -280,14 +301,30 @@ bt_inquiry DeviceINQ::doInquire()
                                 wcstombs(name2, querySet2Result->lpszServiceInstanceName, sizeof(name2));
                                 // printf("%s\n", name2);
                                 if (strlen(name2) == 0)
+                                {
                                     continue;
+                                }
+                                char target[40] = "MyEars";
+                                if (strcmp(name, target) == 0)
+                                {
+                                    BLOB *pBlob = (BLOB *)querySet2Result->lpBlob;
+                                    if (!BluetoothSdpEnumAttributes(pBlob->pBlobData, pBlob->cbSize, callback, 0))
+                                    {
+                                        printf("BluetoothSdpEnumAttributes() failed with error code %ld\n", WSAGetLastError());
+                                    }
+                                    else
+                                    {
+                                        printf("BluetoothSdpEnumAttributes() #%d is OK!\n", i);
+                                    }
+                                }
+
                                 max_bt_device_list[num_rsp].services[num_rsp2] = (char *)malloc(sizeof(name2));
                                 memcpy(max_bt_device_list[num_rsp].services[num_rsp2], name2, sizeof(name2));
+                                memset(name2, '\0', sizeof(name2));
                                 num_rsp2++;
                             }
                             else
                             {
-                                // printf("\n");
                                 int lookupServiceErrorNumber2 = WSAGetLastError();
                                 max_bt_device_list[num_rsp].servicesCount = num_rsp2;
 
@@ -314,11 +351,11 @@ bt_inquiry DeviceINQ::doInquire()
                                     inquiryComplete2 = true;
                                 }
                             }
+                            i++;
                         }
                     }
                     else
                     {
-
                         num_rsp2 = 0;
                         int lookupServiceErrorNumber2 = WSAGetLastError();
                         if (lookupServiceErrorNumber2 != WSASERVICE_NOT_FOUND)
@@ -333,7 +370,7 @@ bt_inquiry DeviceINQ::doInquire()
 
                     strcpy(max_bt_device_list[num_rsp].address, address);
                     strcpy(max_bt_device_list[num_rsp].name, name);
-
+                    memset(name, '\0', sizeof(name));
                     num_rsp++;
                 }
             }

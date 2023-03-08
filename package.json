@@ -40,8 +40,8 @@
     "npm": ">= 1.1.x"
   },
   "scripts": {
-    "install": "node-gyp configure build",
-    "install-debug": "node-gyp configure build --debug",
+    "install": "node-gyp configure rebuild",
+    "install-debug": "node-gyp configure rebuild --debug",
     "install-electron": "node-gyp configure rebuild --target=23.1.1 --arch=ia32 --dist-url=https://electronjs.org/headers",
     "test": "node ./test/index.js"
   },
